@@ -1,6 +1,5 @@
 # build output
 dist/
-assets/
 # generated types
 .astro/
 
