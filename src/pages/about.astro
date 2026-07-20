@@ -36,6 +36,7 @@ const timeline = [
 ---
 
 <BaseLayout
+  tone="teal"
   title="About"
   description="Xee Reiter is a Hmong-American illustrator and muralist who has called Minnesota home for over twenty years."
 >
@@ -90,10 +91,11 @@ const timeline = [
               <div
                 class:list={[
                   'absolute -left-8 top-1 h-3 w-3 rounded-full border-[2.5px] bg-paper',
-                  i % 4 === 0 && 'border-pink',
-                  i % 4 === 1 && 'border-teal',
-                  i % 4 === 2 && 'border-gold',
-                  i % 4 === 3 && 'border-sky',
+                  i % 5 === 0 && 'border-pink',
+                  i % 5 === 1 && 'border-teal',
+                  i % 5 === 2 && 'border-orange',
+                  i % 5 === 3 && 'border-green',
+                  i % 5 === 4 && 'border-lightpink',
                 ]}
               />
               <span class="font-mono text-xs uppercase tracking-wide text-ink-soft">{item.era}</span>

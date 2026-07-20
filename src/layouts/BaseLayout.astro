@@ -8,15 +8,17 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  /** Page background tone — mirrors the two-tone pattern from the original site (pink pages vs. teal pages). */
+  tone?: 'pink' | 'teal';
 }
 
-const { title, description, image = '/og-image.jpg' } = Astro.props;
+const { title, description, image = '/og-image.jpg', tone = 'pink' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-tone={tone}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

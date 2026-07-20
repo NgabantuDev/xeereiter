@@ -8,7 +8,11 @@ import RevealScript from '~/components/RevealScript.astro';
 const murals = (await getCollection('murals')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="Murals" description="Public and community mural work by Xee Reiter across Saint Paul and the Twin Cities.">
+<BaseLayout
+  tone="teal"
+  title="Murals"
+  description="Public and community mural work by Xee Reiter across Saint Paul and the Twin Cities."
+>
   <section class="pb-20 pt-14 md:pb-24 md:pt-16">
     <div class="mx-auto max-w-6xl px-5 sm:px-8">
       <SectionHead as="h1" eyebrow="Public work" title="Murals & place-based projects" />
