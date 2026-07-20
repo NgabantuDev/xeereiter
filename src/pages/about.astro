@@ -1,0 +1,110 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ArtTile from '~/components/ArtTile.astro';
+import FactStrip from '~/components/FactStrip.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import RevealScript from '~/components/RevealScript.astro';
+import aboutPortrait from '~/assets/about-portrait.png';
+
+const timeline = [
+  {
+    era: 'Roots',
+    title: 'Hmong heritage, early sketchbooks',
+    body: 'Drawing as a way of keeping a visual record — a habit that carries through every project since.',
+  },
+  {
+    era: 'Arrival',
+    title: 'Twenty years and counting in Minnesota',
+    body: 'Minneapolis–Saint Paul becomes home, and the starting point for most of the work that follows.',
+  },
+  {
+    era: '2020',
+    title: 'Wonderland, her first solo exterior mural',
+    body: 'Painted for Creative Enterprise Zone at 809 Carleton Street in Saint Paul — dedicated to her child.',
+  },
+  {
+    era: 'Recognition',
+    title: 'Museum, broadcast & publishing partnerships',
+    body: 'The Saint Paul Mural Project with the Minnesota Museum of American Art, illustration for MPR and TPT’s Relish, and art for the picture book The Shared Room by Kao Kalia Yang.',
+  },
+  {
+    era: '2024',
+    title: 'The Grieving Wall',
+    body: 'One of her largest solo murals to date, painted in the Northend neighborhood of Saint Paul.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Xee Reiter is a Hmong-American illustrator and muralist who has called Minnesota home for over twenty years."
+>
+  <section class="pb-20 pt-14 md:pb-24 md:pt-16">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead as="h1" eyebrow="About" title="Twenty years of telling stories through art" />
+      <div class="grid items-center gap-12 md:grid-cols-[1fr_0.8fr]">
+        <div class="reveal">
+          <p class="max-w-[58ch] text-lg text-ink-soft">
+            Illustrator and muralist Xee Reiter has spent the past two decades in Minnesota, drawing on her Hmong
+            heritage and the neighborhoods around her. Murals, park signage, and published illustration make up the
+            public-facing side of the work; a running sketchbook of nature studies and recipes makes up the rest.
+          </p>
+          <p class="mt-4 max-w-[58ch] text-sm text-ink-soft/80">Draft copy — Xee can refine the wording.</p>
+        </div>
+        <div class="reveal rotate-[1deg]">
+          <ArtTile
+            image={aboutPortrait}
+            alt="Illustrated self-portrait of Xee Reiter wearing a respirator and spray-painting"
+            aspect="portrait"
+            sizes="(min-width: 900px) 35vw, 80vw"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <FactStrip
+        quote="visual record keeping"
+        attribution="how Xee describes her sketchbook practice"
+        body="Drawing has always doubled as a personal archive — sketches that later resurface as murals, labels, and editorial work out in the world."
+        facts={[
+          { value: '20+', label: 'years in Minnesota' },
+          { value: 'Murals', label: 'Saint Paul & beyond' },
+          { value: 'Illustration', label: 'brand & editorial' },
+          { value: 'Label design', label: 'client & family projects' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead eyebrow="Timeline" title="A working history" />
+      <div class="reveal relative pl-8">
+        <div class="absolute bottom-1.5 left-1.5 top-1.5 w-0.5 bg-line"></div>
+        {
+          timeline.map((item, i) => (
+            <div class="relative pb-11 last:pb-0">
+              <div
+                class:list={[
+                  'absolute -left-8 top-1 h-3 w-3 rounded-full border-[2.5px] bg-paper',
+                  i % 4 === 0 && 'border-pink',
+                  i % 4 === 1 && 'border-teal',
+                  i % 4 === 2 && 'border-gold',
+                  i % 4 === 3 && 'border-sky',
+                ]}
+              />
+              <span class="font-mono text-xs uppercase tracking-wide text-ink-soft">{item.era}</span>
+              <h3 class="mt-1.5 text-lg font-bold">{item.title}</h3>
+              <p class="mt-1.5 max-w-[56ch] text-[14.5px] text-ink-soft">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <RevealScript />
+</BaseLayout>

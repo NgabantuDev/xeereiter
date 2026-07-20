@@ -1,0 +1,51 @@
+---
+// A decorative vertical thread that fills as the visitor scrolls down the
+// page — a nod to the site's "sketchbook binding" motif. Purely decorative,
+// so it's hidden from assistive tech and skipped entirely under
+// prefers-reduced-motion.
+---
+
+<div class="spine pointer-events-none fixed bottom-0 left-5 top-0 z-40 hidden items-center lg:flex" aria-hidden="true">
+  <svg viewBox="0 0 14 1200" preserveAspectRatio="none" class="h-[96vh] w-3.5 overflow-visible">
+    <path d="M7 0 C 2 100, 12 200, 7 300 S 2 500, 7 600 S 12 800, 7 900 S 2 1100, 7 1200" fill="none" stroke="var(--color-line)" stroke-width="2"></path>
+    <path
+      id="spine-fill"
+      d="M7 0 C 2 100, 12 200, 7 300 S 2 500, 7 600 S 12 800, 7 900 S 2 1100, 7 1200"
+      fill="none"
+      stroke="var(--color-pink)"
+      stroke-width="2"
+      stroke-dasharray="2600"
+      stroke-dashoffset="2600"
+    ></path>
+  </svg>
+</div>
+
+<script>
+  const fillPath = document.getElementById('spine-fill');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (fillPath && !reduce) {
+    const len = 2600;
+    let ticking = false;
+    const update = () => {
+      const h = document.documentElement;
+      const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+      const clamped = Math.min(1, Math.max(0, scrolled));
+      fillPath.setAttribute('stroke-dashoffset', String(len - clamped * len));
+      ticking = false;
+    };
+    document.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+    update();
+  } else if (fillPath) {
+    fillPath.setAttribute('stroke-dashoffset', '0');
+  }
+</script>

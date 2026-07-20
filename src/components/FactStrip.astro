@@ -1,0 +1,35 @@
+---
+interface Fact {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  quote: string;
+  attribution?: string;
+  body: string;
+  facts: Fact[];
+}
+
+const { quote, attribution, body, facts } = Astro.props;
+---
+
+<div class="reveal grid items-start gap-14 md:grid-cols-2">
+  <div>
+    <blockquote class="m-0 text-[clamp(22px,2.6vw,30px)] font-bold leading-[1.28] tracking-tight">
+      “{quote}”
+      {attribution && <cite class="mt-4 block font-mono text-xs not-italic tracking-wide text-ink-soft">— {attribution}</cite>}
+    </blockquote>
+    <p class="mt-6 max-w-[56ch] text-[15px] text-ink-soft">{body}</p>
+  </div>
+  <div class="grid grid-cols-2 gap-px border border-line bg-line">
+    {
+      facts.map((f) => (
+        <div class="bg-paper px-4.5 py-5">
+          <b class="block text-2xl font-extrabold">{f.value}</b>
+          <span class="mt-1 block font-mono text-xs tracking-wide text-ink-soft">{f.label}</span>
+        </div>
+      ))
+    }
+  </div>
+</div>

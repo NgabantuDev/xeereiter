@@ -1,0 +1,71 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ArtTile from '~/components/ArtTile.astro';
+import RevealScript from '~/components/RevealScript.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('illustrations');
+  return items.map((item) => ({ params: { id: item.id }, props: { item } }));
+}
+
+const { item } = Astro.props;
+const { title, client, category, year, medium, description, image, alt, swatch } = item.data;
+const { Content } = await render(item);
+const ogImage = image
+  ? (await getImage({ src: image, width: Math.min(1200, image.width), format: 'jpg' })).src
+  : undefined;
+
+const categoryLabel: Record<string, string> = {
+  illustration: 'Illustration',
+  mural: 'Mural',
+  label: 'Label design',
+};
+---
+
+<BaseLayout title={title} description={description ?? `${title} — ${categoryLabel[category]} by Xee Reiter.`} image={ogImage}>
+  <section class="pb-20 pt-14 md:pb-24 md:pt-16">
+    <div class="mx-auto max-w-5xl px-5 sm:px-8">
+      <a href="/illustrations" class="text-sm font-semibold text-ink-soft no-underline hover:text-ink">← All illustration</a>
+      <div class="mt-8 grid gap-12 md:grid-cols-[1.1fr_0.9fr] md:items-start">
+        <ArtTile {image} alt={alt ?? title} {swatch} aspect="auto" sizes="(min-width: 900px) 55vw, 100vw" priority />
+        <div>
+          <span class="sec-num">{categoryLabel[category]}</span>
+          <h1 class="mt-2 text-4xl font-extrabold">{title}</h1>
+          <dl class="mt-6 space-y-3 border-t border-line pt-6 text-sm">
+            {
+              client && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-ink-soft">Client</dt>
+                  <dd class="text-right font-semibold">{client}</dd>
+                </div>
+              )
+            }
+            {
+              year && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-ink-soft">Year</dt>
+                  <dd class="text-right font-semibold">{year}</dd>
+                </div>
+              )
+            }
+            {
+              medium && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-ink-soft">Medium</dt>
+                  <dd class="text-right font-semibold">{medium}</dd>
+                </div>
+              )
+            }
+          </dl>
+          <div class="prose-content mt-6 max-w-[52ch] text-[15px] text-ink-soft">
+            {description && <p>{description}</p>}
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <RevealScript />
+</BaseLayout>

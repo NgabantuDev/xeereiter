@@ -1,0 +1,16 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<div class="reveal grid grid-cols-2 gap-px border border-line bg-line md:grid-cols-4">
+  {
+    items.map((item) => (
+      <div class="flex min-h-[90px] items-center justify-center bg-paper px-5 py-7 text-center text-sm font-bold tracking-tight text-ink-soft">
+        {item}
+      </div>
+    ))
+  }
+</div>

@@ -1,0 +1,35 @@
+---
+import ArtTile from './ArtTile.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  mural: CollectionEntry<'murals'>;
+  reverse?: boolean;
+  priority?: boolean;
+}
+
+const { mural, reverse = false, priority = false } = Astro.props;
+const { title, location, partner, description, image, alt, swatch } = mural.data;
+---
+
+<article class:list={['reveal grid items-center gap-12 py-11 first:pt-0 md:grid-cols-[0.9fr_1.1fr]', reverse && 'md:grid-cols-[1.1fr_0.9fr]']}>
+  <div class:list={[reverse && 'md:order-2']}>
+    <a href={`/murals/${mural.id}`} class="block no-underline">
+      <ArtTile {image} alt={alt ?? title} {swatch} aspect="video" sizes="(min-width: 900px) 50vw, 100vw" {priority} />
+    </a>
+  </div>
+  <div>
+    <span class="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide text-teal-text">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"></path>
+        <circle cx="12" cy="9" r="2.4"></circle>
+      </svg>
+      {location}
+    </span>
+    <h3 class="mt-2.5 text-2xl font-extrabold">
+      <a href={`/murals/${mural.id}`} class="no-underline hover:underline">{title}</a>
+    </h3>
+    {partner && <p class="mt-1 font-mono text-xs text-ink-soft">{partner}</p>}
+    <p class="mt-3 max-w-[48ch] text-[15px] text-ink-soft">{description}</p>
+  </div>
+</article>

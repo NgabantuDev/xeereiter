@@ -1,0 +1,39 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import PressGrid from '~/components/PressGrid.astro';
+import ContactCTA from '~/components/ContactCTA.astro';
+import RevealScript from '~/components/RevealScript.astro';
+---
+
+<BaseLayout title="Press" description="Press mentions and partners for illustrator and muralist Xee Reiter.">
+  <section class="pb-20 pt-14 md:pb-24 md:pt-16">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead
+        as="h1"
+        eyebrow="Recognition"
+        title="Press & partners"
+        description="A few of the organizations she's worked with — add press links and logos as they come in."
+      />
+      <PressGrid
+        items={[
+          'Minnesota Museum of American Art',
+          'Minnesota Public Radio',
+          'TPT — Twin Cities PBS',
+          'Modist Brewing Co.',
+          'Ramsey County & Metropolitan Council',
+          'City of Bloomington & Artistry',
+          'Forecast Public Art',
+          'Indigenous Roots Cultural Arts Center',
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <ContactCTA />
+    </div>
+  </section>
+  <RevealScript />
+</BaseLayout>

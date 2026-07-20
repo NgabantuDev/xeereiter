@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  image?: ImageMetadata;
+  alt?: string;
+  swatch?: number;
+  aspect?: 'portrait' | 'square' | 'video' | 'wide' | 'auto';
+  sizes?: string;
+  priority?: boolean;
+  class?: string;
+}
+
+const {
+  image,
+  alt = '',
+  swatch = 1,
+  aspect = 'portrait',
+  sizes = '(min-width: 900px) 33vw, (min-width: 560px) 50vw, 100vw',
+  priority = false,
+  class: className = '',
+} = Astro.props;
+
+const aspectClass = {
+  portrait: 'aspect-[4/5]',
+  square: 'aspect-square',
+  video: 'aspect-[16/11]',
+  wide: 'aspect-[4/3]',
+  auto: '',
+}[aspect];
+
+// Only request widths the source can actually satisfy — upscaling errors the build.
+// Capped at 1200: nothing in this layout renders an image wider than ~55vw of a
+// 1024–1152px container, so even at 2x DPR nothing above that is ever selected.
+const widths = image ? [400, 800, 1200].filter((w) => w <= image.width) : [];
+if (image && widths.length === 0) widths.push(image.width);
+---
+
+<div class:list={['torn relative overflow-hidden border border-line', aspectClass, className]}>
+  {
+    image ? (
+      <Image
+        src={image}
+        alt={alt}
+        width={widths[widths.length - 1]}
+        widths={widths}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        decoding={priority ? 'sync' : 'async'}
+        format="webp"
+        quality={78}
+        class={aspect === 'auto' ? 'h-auto w-full' : 'h-full w-full object-cover'}
+      />
+    ) : (
+      <div class:list={['relative h-full w-full', `sw-${swatch}`]}>
+        <span
+          class="absolute bottom-2.5 left-2.5 rounded bg-black/30 px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-white"
+        >
+          placeholder
+        </span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .sw-1 {
+    background: linear-gradient(155deg, #f2b6c9, #e23f73 60%, #8c1e45);
+  }
+  .sw-2 {
+    background: linear-gradient(155deg, #8fdcd6, #157f82 55%, #0b4c4e);
+  }
+  .sw-3 {
+    background: linear-gradient(155deg, #f6d584, #de9a28 55%, #8a5e10);
+  }
+  .sw-4 {
+    background: linear-gradient(155deg, #9fc3e8, #3e7cb8 55%, #1e3f5c);
+  }
+  .sw-5 {
+    background: linear-gradient(155deg, #f2b6c9, #3e7cb8 70%, #211d1a);
+  }
+  .sw-6 {
+    background: linear-gradient(155deg, #f6d584, #e23f73 65%, #5c1030);
+  }
+  [class^='sw-']::after,
+  [class*=' sw-']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 7px 7px;
+    mix-blend-mode: soft-light;
+  }
+</style>

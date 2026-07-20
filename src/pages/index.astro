@@ -1,13 +1,119 @@
 ---
-import '~/styles/global.css';
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ArtTile from '~/components/ArtTile.astro';
+import FactStrip from '~/components/FactStrip.astro';
+import GalleryGrid from '~/components/GalleryGrid.astro';
+import MuralCase from '~/components/MuralCase.astro';
+import PressGrid from '~/components/PressGrid.astro';
+import ContactCTA from '~/components/ContactCTA.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import RevealScript from '~/components/RevealScript.astro';
+import aboutPortrait from '~/assets/about-portrait.png';
+
+const featured = (await getCollection('illustrations'))
+  .filter((i) => i.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const heroPiece = featured[0];
+
+const murals = (await getCollection('murals')).sort((a, b) => a.data.order - b.data.order);
+const featuredMural = murals[0];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Astro App</title>
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold text-center mt-10">Hello Tailwind + Astro!</h1>
-  </body>
-</html>
+<BaseLayout
+  title="Home"
+  description="Xee Reiter is a Hmong-American illustrator and muralist based in Saint Paul, Minnesota — murals, brand illustration, and label design."
+>
+  <section class="pb-20 pt-14 md:pb-24 md:pt-16">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <span class="eyebrow-tag"><span class="h-1.5 w-1.5 rounded-full bg-pink"></span>Saint Paul, Minnesota</span>
+      <div class="mt-6 grid items-center gap-12 md:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <h1 class="text-[clamp(34px,5.2vw,64px)] font-extrabold leading-[1.03]">
+            Stories, painted onto brick, paper &amp; everything between.
+          </h1>
+          <p class="mt-5 max-w-[46ch] text-lg text-ink-soft">
+            Illustration and mural work grounded in Hmong heritage and two decades based in the Twin Cities — for
+            breweries, museums, public walls, and family recipes alike.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3.5">
+            <a href="/illustrations" class="btn-primary">View the work</a>
+            <a href="/contact" class="btn-ghost">Commission a mural</a>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="rotate-[-1.4deg]">
+            <ArtTile
+              image={heroPiece?.data.image}
+              alt={heroPiece?.data.alt ?? heroPiece?.data.title ?? ''}
+              swatch={1}
+              aspect="portrait"
+              sizes="(min-width: 900px) 45vw, 90vw"
+              priority
+            />
+          </div>
+          <figure class="absolute -bottom-7 -right-7 hidden w-[44%] rotate-[4deg] border border-line bg-paper p-2.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.18)] sm:block">
+            <ArtTile image={aboutPortrait} alt="Illustrated self-portrait of Xee Reiter painting" swatch={3} aspect="square" sizes="20vw" />
+            <figcaption class="mt-2 text-center font-mono text-[10px] text-ink-soft">studio self-portrait</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <FactStrip
+        quote="To be an artist anywhere, you have to embrace your surroundings."
+        attribution="from Xee's studio notes"
+        body="Illustration and mural work grounded in Hmong heritage and two decades in the Twin Cities — client collaborations, public walls, and a running sketchbook practice in between."
+        facts={[
+          { value: '20+', label: 'years in Minnesota' },
+          { value: 'Murals', label: 'Saint Paul & beyond' },
+          { value: 'Illustration', label: 'brand & editorial' },
+          { value: 'Muralist', label: 'public & community art' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead eyebrow="Selected work" title="Illustration & label design" description="A working archive of client, editorial, and personal illustration.">
+        <a href="/illustrations" class="reveal btn-ghost">See all work</a>
+      </SectionHead>
+      <GalleryGrid items={featured} />
+    </div>
+  </section>
+
+  {
+    featuredMural && (
+      <section class="border-t border-line py-20 md:py-24">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <SectionHead eyebrow="Public work" title="Murals & place-based projects">
+            <a href="/murals" class="reveal btn-ghost">
+              See all murals
+            </a>
+          </SectionHead>
+          <MuralCase mural={featuredMural} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead eyebrow="Recognition" title="Press & partners" />
+      <PressGrid items={['Minnesota Museum of American Art', 'Minnesota Public Radio', 'TPT — Twin Cities PBS', 'Modist Brewing Co.']} />
+    </div>
+  </section>
+
+  <section class="border-t border-line py-20 md:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <ContactCTA compact />
+    </div>
+  </section>
+
+  <RevealScript />
+</BaseLayout>

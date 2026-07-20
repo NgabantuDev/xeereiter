@@ -1,0 +1,12 @@
+---
+interface Props {
+  class?: string;
+  as?: 'span' | 'p';
+}
+const { class: className = '', as: Tag = 'span' } = Astro.props;
+const letters = 'Xeereiter'.split('');
+---
+
+<Tag class:list={['word inline-flex font-extrabold tracking-tight', className]}>
+  {letters.map((l) => <span>{l}</span>)}
+</Tag>

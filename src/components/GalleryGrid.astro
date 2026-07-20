@@ -1,0 +1,120 @@
+---
+import ArtTile from './ArtTile.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  items: CollectionEntry<'illustrations'>[];
+  filters?: boolean;
+}
+
+const { items, filters = false } = Astro.props;
+
+const categoryLabel: Record<string, string> = {
+  illustration: 'Illustration',
+  mural: 'Murals',
+  label: 'Label design',
+};
+
+const aspectByCategory: Record<string, 'portrait' | 'square' | 'wide'> = {
+  illustration: 'portrait',
+  mural: 'wide',
+  label: 'square',
+};
+---
+
+{
+  filters && (
+    <div class="reveal mb-9 flex flex-wrap gap-2.5" role="group" aria-label="Filter by category">
+      <button class="chip" data-filter="all" aria-pressed="true">
+        All
+      </button>
+      <button class="chip" data-filter="illustration" aria-pressed="false">
+        Illustration
+      </button>
+      <button class="chip" data-filter="mural" aria-pressed="false">
+        Murals
+      </button>
+      <button class="chip" data-filter="label" aria-pressed="false">
+        Label design
+      </button>
+    </div>
+  )
+}
+
+<div class="reveal gallery" id="gallery">
+  {
+    items.map((item) => (
+      <a href={`/illustrations/${item.id}`} class="piece mb-5.5 block break-inside-avoid no-underline" data-cat={item.data.category}>
+        <ArtTile image={item.data.image} alt={item.data.alt ?? item.data.title} swatch={item.data.swatch} aspect={aspectByCategory[item.data.category]} />
+        <div class="flex items-start justify-between gap-2.5 pt-2.5">
+          <b class="text-sm font-bold text-ink">{item.data.title}</b>
+          <span class="whitespace-nowrap text-right font-mono text-[11px] text-ink-soft">
+            {item.data.client ?? categoryLabel[item.data.category]}
+            {item.data.year && (
+              <>
+                <br />
+                {item.data.year}
+              </>
+            )}
+          </span>
+        </div>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .gallery {
+    column-count: 1;
+    column-gap: 22px;
+  }
+  @media (min-width: 560px) {
+    .gallery {
+      column-count: 2;
+    }
+  }
+  @media (min-width: 900px) {
+    .gallery {
+      column-count: 3;
+    }
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-line);
+    background: transparent;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+  }
+  .chip[aria-pressed='true'] {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    background: var(--color-paper-2);
+  }
+  .piece.is-hidden {
+    display: none;
+  }
+</style>
+
+{
+  filters && (
+    <script>
+      const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+      const pieces = document.querySelectorAll<HTMLElement>('.piece');
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+          chip.setAttribute('aria-pressed', 'true');
+          const filter = chip.dataset.filter;
+          pieces.forEach((p) => {
+            p.classList.toggle('is-hidden', filter !== 'all' && p.dataset.cat !== filter);
+          });
+        });
+      });
+    </script>
+  )
+}

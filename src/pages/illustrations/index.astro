@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import GalleryGrid from '~/components/GalleryGrid.astro';
+import RevealScript from '~/components/RevealScript.astro';
+
+const items = (await getCollection('illustrations')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Illustration"
+  description="Illustration, editorial art, and label design by Xee Reiter — brand collaborations, publication work, and personal studies."
+>
+  <section class="pb-20 pt-14 md:pb-24 md:pt-16">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <SectionHead
+        as="h1"
+        eyebrow="Selected work"
+        title="Illustration & label design"
+        description="A working archive — filter by kind, or open a piece for the full wall label."
+      />
+      <GalleryGrid items={items} filters />
+    </div>
+  </section>
+  <RevealScript />
+</BaseLayout>
