@@ -20,8 +20,17 @@
  * wordmark qualifies for WCAG's large-text logo exemption), and as
  * decorative borders/dots. The one small-text accent use — the mural
  * location label — gets its own darkened, contrast-checked token below.
+ *
+ * No dark mode on this branch, intentionally: the whole point of this
+ * variant is the bright pastel page backgrounds, which a dark-mode
+ * override would just replace with near-black — same as it does on
+ * main, making the two branches look nearly identical to anyone whose
+ * OS is set to dark. The original site never had a dark mode either.
+ * `color-scheme: light` keeps browser chrome (scrollbars, form
+ * controls) from mismatching against the always-light page.
  */
 :root {
+  color-scheme: light;
   --color-paper: #f3dadb;
   --color-paper-2: #ecc5c9;
   --color-header: #ffffff;
@@ -41,22 +50,6 @@
 :root[data-tone="teal"] {
   --color-paper: #91d6d3;
   --color-paper-2: #78c4c0;
-}
-
-@media (prefers-color-scheme: dark) {
-  /* the attribute selector is included so the dark override always wins
-     over the (higher-specificity) light-mode tone selector above */
-  :root,
-  :root[data-tone="teal"] {
-    --color-paper: #17110f;
-    --color-paper-2: #221a17;
-    --color-header: #17110f;
-    --color-ink: #f3ebdd;
-    --color-ink-soft: #cbb9b5;
-    --color-line: rgb(243 235 221 / 0.16);
-    /* raw teal already passes AA on near-black (5.8:1), no need to darken */
-    --color-teal-text: #4d99b2;
-  }
 }
 
 @theme inline {
@@ -86,12 +79,6 @@
     color: var(--color-ink);
     background-image: radial-gradient(rgb(32 27 22 / 0.05) 0.6px, transparent 0.6px);
     background-size: 5px 5px;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-image: radial-gradient(rgb(243 235 221 / 0.05) 0.6px, transparent 0.6px);
-    }
   }
 
   h1,
