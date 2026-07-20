@@ -1,50 +1,69 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Values are set on :root (and re-set inside the dark
+ * Design tokens — palette sampled directly from the original xeereiter.com
+ * (Wix site): the blush-pink / mint-teal page backgrounds, and the six
+ * hand-drawn wordmark colors, pulled pixel-for-pixel from the live logo
+ * and page chrome. This is the "vibrant" variant for comparison against
+ * the muted sketchbook palette on main.
+ *
+ * Values are set on :root (re-set per page "tone" and inside the dark
  * media query) as plain CSS custom properties, then re-declared under
  * `@theme inline` so Tailwind generates utilities (bg-paper, text-ink, …)
  * that reference the variable instead of a baked-in value — that's what
- * makes `bg-paper` etc. automatically switch with the OS color scheme.
+ * makes `bg-paper` etc. automatically switch with tone and color scheme.
+ *
+ * Contrast note: the six brand colors are far too light/saturated to use
+ * as small text on the pastel page backgrounds (verified — most land
+ * under 2:1). They're used as button/badge fills with dark text on top
+ * (verified 4.9–11.1:1), as large bold display type (the "Xeereiter"
+ * wordmark qualifies for WCAG's large-text logo exemption), and as
+ * decorative borders/dots. The one small-text accent use — the mural
+ * location label — gets its own darkened, contrast-checked token below.
+ *
+ * No dark mode on this branch, intentionally: the whole point of this
+ * variant is the bright pastel page backgrounds, which a dark-mode
+ * override would just replace with near-black — same as it does on
+ * main, making the two branches look nearly identical to anyone whose
+ * OS is set to dark. The original site never had a dark mode either.
+ * `color-scheme: light` keeps browser chrome (scrollbars, form
+ * controls) from mismatching against the always-light page.
  */
 :root {
-  --color-paper: #f6f1e4;
-  --color-paper-2: #efe7d2;
-  --color-ink: #201b16;
-  --color-ink-soft: #4a4137;
-  --color-pink: #e23f73;
-  --color-teal: #157f82;
-  --color-gold: #de9a28;
-  --color-sky: #3e7cb8;
-  --color-line: rgb(32 27 22 / 0.14);
-  /* darker than --color-teal — passes WCAG AA (4.5:1) for small text on paper, where --color-teal (4.24:1) falls just short */
-  --color-teal-text: #0c5f61;
+  color-scheme: light;
+  --color-paper: #f3dadb;
+  --color-paper-2: #ecc5c9;
+  --color-header: #ffffff;
+  --color-ink: #14100d;
+  --color-ink-soft: #4a3f3d;
+  --color-pink: #fd0076;
+  --color-teal: #4d99b2;
+  --color-gold: #e1c14b;
+  --color-orange: #f37914;
+  --color-green: #66df69;
+  --color-lightpink: #fd94c0;
+  --color-line: rgb(0 0 0 / 0.14);
+  /* darkened teal — passes WCAG AA (4.5:1) for small text on both page tones, where raw --color-teal (2.4:1) falls well short */
+  --color-teal-text: #234550;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-paper: #1b1611;
-    --color-paper-2: #241e17;
-    --color-ink: #f3ebdd;
-    --color-ink-soft: #c9beac;
-    --color-pink: #f0578f;
-    --color-teal: #39c2bc;
-    --color-gold: #f0b94a;
-    --color-sky: #6aa6e0;
-    --color-line: rgb(243 235 221 / 0.16);
-    --color-teal-text: #39c2bc;
-  }
+:root[data-tone="teal"] {
+  --color-paper: #91d6d3;
+  --color-paper-2: #78c4c0;
 }
 
 @theme inline {
   --color-paper: var(--color-paper);
   --color-paper-2: var(--color-paper-2);
+  --color-header: var(--color-header);
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
   --color-pink: var(--color-pink);
   --color-teal: var(--color-teal);
   --color-gold: var(--color-gold);
-  --color-sky: var(--color-sky);
+  --color-orange: var(--color-orange);
+  --color-green: var(--color-green);
+  --color-lightpink: var(--color-lightpink);
   --color-line: var(--color-line);
   --color-teal-text: var(--color-teal-text);
 }
@@ -62,12 +81,6 @@
     background-size: 5px 5px;
   }
 
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-image: radial-gradient(rgb(243 235 221 / 0.05) 0.6px, transparent 0.6px);
-    }
-  }
-
   h1,
   h2,
   h3,
@@ -83,14 +96,15 @@
 }
 
 @layer components {
+  /* dark ink text on bright fills — verified 4.9–11.1:1 across all six accent colors, well above AA */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full border-[1.5px] px-6 py-3 text-sm font-bold no-underline transition-colors border-ink bg-ink text-paper hover:border-pink hover:bg-pink hover:text-white;
+    @apply inline-flex items-center gap-2 rounded-full border-[1.5px] px-6 py-3 text-sm font-bold text-ink no-underline transition-colors border-pink bg-pink hover:border-teal hover:bg-teal;
   }
   .btn-ghost {
     @apply inline-flex items-center gap-2 rounded-full border-[1.5px] px-6 py-3 text-sm font-bold no-underline transition-colors border-ink text-ink hover:bg-ink hover:text-paper;
   }
   .eyebrow-tag {
-    @apply inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-ink-soft;
+    @apply inline-flex items-center gap-2 rounded-full border-[1.5px] border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-ink;
   }
   .sec-num {
     @apply font-mono text-xs uppercase tracking-wide text-ink-soft;
@@ -101,6 +115,7 @@
   /* the multicolor wordmark treatment, applied to spans wrapping each letter/word */
   .word > * {
     display: inline-block;
+    text-shadow: 1.5px 1.5px 0 rgb(0 0 0 / 0.16);
   }
   .word > *:nth-child(6n + 1) {
     color: var(--color-pink);
@@ -109,16 +124,16 @@
     color: var(--color-teal);
   }
   .word > *:nth-child(6n + 3) {
-    color: var(--color-gold);
+    color: var(--color-orange);
   }
   .word > *:nth-child(6n + 4) {
-    color: var(--color-sky);
+    color: var(--color-green);
   }
   .word > *:nth-child(6n + 5) {
-    color: var(--color-pink);
+    color: var(--color-lightpink);
   }
   .word > *:nth-child(6n) {
-    color: var(--color-teal);
+    color: var(--color-gold);
   }
 
   .torn {
